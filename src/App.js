@@ -12,7 +12,6 @@ function App() {
   const [sortOption, setSortOption] = useState("");
   const [favorites, setFavorites] = useState([]);
 
-  // ✅ Load favorites from localStorage on first render
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -22,12 +21,10 @@ function App() {
     }
   }, []);
 
-  // ✅ Save favorites whenever they change
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  // 🔎 Search movies and fetch full details
   const searchMovies = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
@@ -63,7 +60,6 @@ function App() {
     }
   };
 
-  // 🎚 Apply filters
   let filteredMovies = movies.filter((m) => {
     let ok = true;
     if (yearFilter && m.Year !== yearFilter) ok = false;
@@ -71,7 +67,6 @@ function App() {
     return ok;
   });
 
-  // 🔽 Apply sorting
   if (sortOption === "yearAsc") {
     filteredMovies.sort((a, b) => parseInt(a.Year) - parseInt(b.Year));
   } else if (sortOption === "yearDesc") {
@@ -82,7 +77,6 @@ function App() {
     filteredMovies.sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating));
   }
 
-  // ⭐ Favorite handling
   const toggleFavorite = (movie) => {
     const exists = favorites.find((f) => f.imdbID === movie.imdbID);
     if (exists) {
@@ -98,7 +92,6 @@ function App() {
     <div className="max-w-6xl mx-auto p-6 font-sans">
       <h1 className="text-3xl font-bold mb-6">🎬 Movie Search</h1>
 
-      {/* Search bar */}
       <form onSubmit={searchMovies} className="flex gap-2 mb-4">
         <input
           type="text"
@@ -116,7 +109,6 @@ function App() {
         </button>
       </form>
 
-      {/* Filters + Sorting */}
       <div className="flex flex-wrap gap-3 mb-6 items-center">
         <input
           type="number"
@@ -145,13 +137,11 @@ function App() {
         </select>
       </div>
 
-      {/* Messages */}
       {error && <div className="text-red-600 mb-4">{error}</div>}
       {!error && movies.length === 0 && !loading && (
         <div className="text-gray-500 mb-4">Try searching for “Inception”.</div>
       )}
 
-      {/* Movie grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredMovies.map((m) => (
           <div
@@ -184,7 +174,6 @@ function App() {
         ))}
       </div>
 
-      {/* Favorites section */}
       {favorites.length > 0 && (
         <div className="mt-10">
           <h2 className="text-2xl font-bold mb-4">⭐ Your Favorites</h2>
